@@ -26,11 +26,29 @@ function parseSuccessMessage(data) {
 }
 
 function parseErrorMessage(data){
-    var object = JSON.stringify(data);
+    
+    var temp = JSON.stringify(data);
     //var errorMessage = object.
+    var object = JSON.parse(temp);
 
     var stateValue = object.readyState;
-    var responseCode = object.responseText.Code;
+    var responseValue = JSON.parse(object.responseText);
+    var errorCode = responseValue.Code;
+
+    if(errorCode=="BadRequestImageSizeBytes")
+    {
+        //이미지 크기가 큰 경우         
+        if (confirm('이미지가 너무 큽니다.. 임의로 줄여서 전송할까요?')) {
+            //Azure Function을 이용하여 리사이징 합니다...
+
+            //Queue를 이용해봅니다??
+
+        } else {
+            // Do nothing!
+            var resultMessage = "<h1>이미지가 너무 커서 업로드에 실패했습니다...</h1>";
+            document.getElementById('resultContainer').innerHTML = resultMessage;
+        }
+    }
     
 }
 
