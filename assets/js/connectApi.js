@@ -74,7 +74,6 @@ function parseErrorMessage(data){
             //Queue를 이용해봅니다??
 
 
-
         } else {
             // Do nothing!
             var resultMessage = "<h1>이미지가 너무 커서 업로드에 실패했습니다...</h1>";
