@@ -28,7 +28,7 @@ function parseSuccessMessage(data) {
 function connectToAzureStroage(file){
     
     var fileName = file.name;
-    var uriValue = "https://eunkflowers.blob.core.windows.net/input/"+fileName+"?st=2017-08-14T10%3A48%3A00Z&se=2017-08-15T10%3A48%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=Q3dsGI5dp9U23dN94BaXxrhK4%2F56Mj4PJPNaP4nIOjE%3D";
+    var uriValue = "https://noodleprojectstorage.blob.core.windows.net/input/"+fileName+"?st=2017-08-14T10%3A48%3A00Z&se=2017-08-15T10%3A48%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=otl46zZefXi06UHRm8jDVwNnvhhbhgUStUAWsazz1f4%3D";
 
     var settings = {
         "async": true,
