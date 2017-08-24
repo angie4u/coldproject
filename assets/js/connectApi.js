@@ -105,11 +105,11 @@ $(document).ready(function () {
     $('#goBtn').click(function () {
         $.ajax({
             //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
-            url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/d5913d73-8da0-46d4-be1d-17d7fd45f888/inline/url',
+            url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url',
             method: 'POST',
             headers: {
                 //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
-                "prediction-key": "b11fa5d5345147968406c8f3b638ec4a",
+                "prediction-key": "79ea46b6255542e285abd8d1be7249fe",
                 "content-type": "application/x-www-form-urlencoded"
             },
             data: {
