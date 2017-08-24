@@ -63,15 +63,33 @@ function parseErrorMessage(data){
     if(errorCode=="BadRequestImageSizeBytes")
     {
         //이미지 크기가 큰 경우         
-        if (confirm('이미지가 너무 큽니다.. 임의로 줄여서 전송할까요?')) {
+        if (confirm('이미지가 너무 큽니다.. 이미지 줄여서 전송할까요?')) {
             
-            var width = eval("document.")
+            //1. Azure Function 호출하여 이미지 리사이즈
+            connectToAzureStroage(file);
 
-            //우선 Azure Blob Storage에 이미지 파일 전송
-            
-            //Azure Function을 이용하여 리사이징 합니다...
+            //2. 리사이즈 된 이미지 주소 전달하여 호출  
+            var resizedImageUrl = "";
 
-            //Queue를 이용해봅니다??
+            $.ajax({
+                //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
+                url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/d5913d73-8da0-46d4-be1d-17d7fd45f888/inline/url',
+                method: 'POST',
+                headers: {
+                    //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
+                    "prediction-key": "b11fa5d5345147968406c8f3b638ec4a",
+                    "content-type": "application/x-www-form-urlencoded"
+                },
+                data: {
+                    Url: $('#imgUrl').val()
+                },
+                dataType: 'text',
+                success: function (data) {
+                    parseSuccessMessage(data);
+                    document.getElementById('urlForm').reset();
+                }
+            });
+
 
 
         } else {
@@ -113,13 +131,51 @@ $(document).ready(function () {
         formData.append("fileObj", $("#fileTag")[0].files[0]);
 
         var imageSize = $("#fileTag")[0].files[0].size;
-        //alert(imageSize);
+        
 
         //image 크기가 4MB 보다 큰경우
         if(imageSize > 4194304)
         {
-            var fileData = $("#fileTag")[0].files[0];
-            connectToAzureStroage(fileData);
+            //이미지 전송 여부 묻기 
+            if (confirm('이미지가 너무 큽니다.. 이미지 줄여서 전송할까요?')) {
+            
+                //이미지가 크므로 Azure Function 호출하여 이미지 리사이즈 및 output storage에 저장
+                var fileData = $("#fileTag")[0].files[0];
+                connectToAzureStroage(fileData);
+
+                //이미지가 저장된 Url을 이용하여 다시금 POST요청 
+                var resizedImageUrl = "https://noodleprojectstorage.blob.core.windows.net/images-thumbnail/"+fileData.name;
+
+                $.ajax({
+                    //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
+                    url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url',
+                    method: 'POST',
+                    headers: {
+                        //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
+                        "prediction-key": "79ea46b6255542e285abd8d1be7249fe",
+                        "content-type": "application/x-www-form-urlencoded"
+                    },
+                    data: {
+                        Url: resizedImageUrl
+                    },
+                    dataType: 'text',
+                    success: function (data) {
+                        parseSuccessMessage(data);
+                        document.getElementById('urlForm').reset();
+                    }
+                });
+
+
+            } 
+            else {
+                // Do nothing!
+                var resultMessage = "<h1>이미지가 너무 커서 업로드에 실패했습니다...</h1>";
+                document.getElementById('resultContainer').innerHTML = resultMessage;
+
+            }
+
+
+            
             
         }
         else{
