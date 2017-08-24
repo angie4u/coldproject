@@ -99,7 +99,7 @@ $(document).ready(function () {
             },
             dataType: 'text',
             success: function (data) {
-                parseJson(data);
+                parseSuccessMessage(data);
                 document.getElementById('urlForm').reset();
             }
         });
