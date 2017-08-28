@@ -59,46 +59,6 @@ function parseErrorMessage(data){
     var stateValue = object.readyState;
     var responseValue = JSON.parse(object.responseText);
     var errorCode = responseValue.Code;
-
-    if(errorCode=="BadRequestImageSizeBytes")
-    {
-        //이미지 크기가 큰 경우         
-        if (confirm('이미지가 너무 큽니다.. 이미지 줄여서 전송할까요?')) {
-            
-            //1. Azure Function 호출하여 이미지 리사이즈
-            connectToAzureStroage(file);
-
-            //2. 리사이즈 된 이미지 주소 전달하여 호출  
-            var resizedImageUrl = "";
-
-            $.ajax({
-                //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
-                url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/d5913d73-8da0-46d4-be1d-17d7fd45f888/inline/url',
-                method: 'POST',
-                headers: {
-                    //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
-                    "prediction-key": "b11fa5d5345147968406c8f3b638ec4a",
-                    "content-type": "application/x-www-form-urlencoded"
-                },
-                data: {
-                    Url: $('#imgUrl').val()
-                },
-                dataType: 'text',
-                success: function (data) {
-                    parseSuccessMessage(data);
-                    document.getElementById('urlForm').reset();
-                }
-            });
-
-
-
-        } else {
-            // Do nothing!
-            var resultMessage = "<h1>이미지가 너무 커서 업로드에 실패했습니다...</h1>";
-            document.getElementById('resultContainer').innerHTML = resultMessage;
-        }
-    }
-    
 }
 
 $(document).ready(function () {
@@ -173,8 +133,6 @@ $(document).ready(function () {
                 document.getElementById('resultContainer').innerHTML = resultMessage;
 
             }
-
-
             
             
         }
