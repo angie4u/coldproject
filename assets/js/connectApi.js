@@ -28,7 +28,7 @@ function parseSuccessMessage(data) {
 function connectToAzureStroage(file){
     
     var fileName = file.name;
-    var uriValue = "https://noodleprojectstorage.blob.core.windows.net/input/"+fileName+"?st=2017-08-15T16%3A06%3A00Z&se=2017-09-16T16%3A06%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=2kJwPvdo3YbyTknIevcXn2Q%2FgP7GhBHsujK4jEAJZzk%3D";
+    var uriValue = "https://krnoodlestorage.blob.core.windows.net/input/"+fileName+"?st=2017-08-29T05%3A21%3A00Z&se=2017-12-31T05%3A21%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=yXmI8FEk23%2BRlb4CowdBdmxtLp1Su%2F03LRjZ34qyUN0%3D";
 
     var settings = {
         "async": true,
@@ -104,7 +104,7 @@ $(document).ready(function () {
                 connectToAzureStroage(fileData);
 
                 //이미지가 저장된 Url을 이용하여 다시금 POST요청 
-                var resizedImageUrl = "https://noodleprojectstorage.blob.core.windows.net/images-thumbnail/"+fileData.name;
+                var resizedImageUrl = "https://krnoodlestorage.blob.core.windows.net/thumbnail/"+fileData.name;
 
                 $.ajax({
                     //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
@@ -131,6 +131,7 @@ $(document).ready(function () {
                 // Do nothing!
                 var resultMessage = "<h1>이미지가 너무 커서 업로드에 실패했습니다...</h1>";
                 document.getElementById('resultContainer').innerHTML = resultMessage;
+                document.getElementById('fileForm').reset();
 
             }
             
