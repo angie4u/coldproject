@@ -1,14 +1,17 @@
+const customApiImageUrl = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/image";
+const customApiUrl = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url";
+const customApiKey = "79ea46b6255542e285abd8d1be7249fe";
 
 $(document).ready(function () {
     //사용자가 URL 입력 후 전송 버튼을 눌렀을 떄 동작하는 코드
     $('#urlSendButton').click(function () {
         $.ajax({
             //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
-            url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url',
+            url: customApiUrl,
             method: 'POST',
             headers: {
                 //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
-                "prediction-key": "79ea46b6255542e285abd8d1be7249fe",
+                "prediction-key": customApiKey,
                 "content-type": "application/x-www-form-urlencoded"
             },
             data: {
@@ -48,11 +51,11 @@ $(document).ready(function () {
 
                 $.ajax({
                     //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
-                    url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url',
+                    url: customApiUrl,
                     method: 'POST',
                     headers: {
                         //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
-                        "prediction-key": "79ea46b6255542e285abd8d1be7249fe",
+                        "prediction-key": customApiKey,
                         "content-type": "application/x-www-form-urlencoded"
                     },
                     data: {
@@ -80,7 +83,7 @@ $(document).ready(function () {
         else{
             $.ajax({
                 //PERFORMANCE 탭의 Prediction URL 에서 하단의 image file 부분 참조 
-                url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/image',
+                url: customApiImageUrl,
                 method: 'POST',
                 headers: {
                     //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
@@ -100,10 +103,7 @@ $(document).ready(function () {
                     //alert("error");
                     parseErrorMessage(data);
             });
-        }
-
-
-        
+        }        
     });
 });
 
