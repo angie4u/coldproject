@@ -1,13 +1,16 @@
-const customApiImageUrl = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/image";
-const customApiUrl = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url";
+const customApiUrl = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/"
 const customApiKey = "79ea46b6255542e285abd8d1be7249fe";
+
+const inputStorageUrl = "https://krnoodlestorage.blob.core.windows.net/input/";
+const outputStorageUrl = "https://krnoodlestorage.blob.core.windows.net/thumbnail/";
+const storageSAS = "?st=2017-08-29T05%3A21%3A00Z&se=2017-12-31T05%3A21%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=yXmI8FEk23%2BRlb4CowdBdmxtLp1Su%2F03LRjZ34qyUN0%3D";
 
 $(document).ready(function () {
     //사용자가 URL 입력 후 전송 버튼을 눌렀을 떄 동작하는 코드
     $('#urlSendButton').click(function () {
         $.ajax({
             //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
-            url: customApiUrl,
+            url: customApiUrl+"url",
             method: 'POST',
             headers: {
                 //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
@@ -47,11 +50,11 @@ $(document).ready(function () {
                 connectToAzureStroage(fileData);
 
                 //이미지가 저장된 Url을 이용하여 다시금 POST요청 
-                var resizedImageUrl = "https://krnoodlestorage.blob.core.windows.net/thumbnail/"+fileData.name;
+                var resizedImageUrl = outputStorageUrl+fileData.name;
 
                 $.ajax({
                     //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
-                    url: customApiUrl,
+                    url: customApiUrl+"url",
                     method: 'POST',
                     headers: {
                         //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
@@ -83,11 +86,11 @@ $(document).ready(function () {
         else{
             $.ajax({
                 //PERFORMANCE 탭의 Prediction URL 에서 하단의 image file 부분 참조 
-                url: customApiImageUrl,
+                url: customApiUrl+"image",
                 method: 'POST',
                 headers: {
                     //PERFORMANCE 탭의 Prediction URL 에서 Prediction-Key 참조 
-                    "prediction-key": "79ea46b6255542e285abd8d1be7249fe"
+                    "prediction-key": customApiKey
                 },
                 processData: false,
                 contentType: false,
@@ -137,7 +140,7 @@ function parseSuccessMessage(data) {
 function connectToAzureStroage(file){
     
     var fileName = file.name;
-    var uriValue = "https://krnoodlestorage.blob.core.windows.net/input/"+fileName+"?st=2017-08-29T05%3A21%3A00Z&se=2017-12-31T05%3A21%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=yXmI8FEk23%2BRlb4CowdBdmxtLp1Su%2F03LRjZ34qyUN0%3D";
+    var uriValue = inputStorageUrl+fileName+storageSAS;
 
     var settings = {
         "async": true,
@@ -152,8 +155,7 @@ function connectToAzureStroage(file){
     }
 
     $.ajax(settings).done(function (response) {
-        //console.log(response);
-        //Azure Storage에 이미지 데이터 전송 완료
+        
         document.getElementById('fileForm').reset(); //Data Reset
     });
 }
@@ -162,7 +164,6 @@ function connectToAzureStroage(file){
 function parseErrorMessage(data){
     
     var temp = JSON.stringify(data);
-    //var errorMessage = object.
     var object = JSON.parse(temp);
 
     var stateValue = object.readyState;
