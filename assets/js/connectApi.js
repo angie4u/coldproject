@@ -1,68 +1,7 @@
 
-function parseSuccessMessage(data) {
-    var object = JSON.parse(data);
-    var percentValue = object.Predictions[0].Probability;
-    var noodleValue = object.Predictions[0].Tag;
-    if (percentValue > 0.9) {
-        percentValue = percentValue * 100;
-        $('#percent').append(percentValue);
-        $('#noodleName').append(noodleValue);
-
-        var resultMessage = '<h1>' + noodleValue + '일 확률이 ' + percentValue + '% 정도 됩니다!</h1>';
-        document.getElementById('resultContainer').innerHTML = resultMessage;
-    }
-    else if (percentValue > 0.5) {
-        percentValue = percentValue * 100;
-        $('#percent').append(percentValue);
-        $('#noodleName').append(noodleValue);
-
-        var resultMessage = '<h1>확실하진 않지만... ' + noodleValue + '일 확률이 ' + percentValue + '% 정도 됩니다!</h1>';
-        document.getElementById('resultContainer').innerHTML = resultMessage;
-    }
-    else {
-        var exceptionMessage = '<h1>이거 냉면사진 맞아요? 아닌것 같은데...</h1>'
-        document.getElementById('resultContainer').innerHTML = exceptionMessage;
-    }
-}
-
-function connectToAzureStroage(file){
-    
-    var fileName = file.name;
-    var uriValue = "https://krnoodlestorage.blob.core.windows.net/input/"+fileName+"?st=2017-08-29T05%3A21%3A00Z&se=2017-12-31T05%3A21%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=yXmI8FEk23%2BRlb4CowdBdmxtLp1Su%2F03LRjZ34qyUN0%3D";
-
-    var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": uriValue,
-        "method": "PUT",
-        "headers": {
-            "x-ms-blob-type": "BlockBlob",           
-        },
-        "data": file,
-        "processData": false
-    }
-
-    $.ajax(settings).done(function (response) {
-        //console.log(response);
-        //Azure Storage에 이미지 데이터 전송 완료
-        document.getElementById('fileForm').reset(); //Data Reset
-    });
-}
-
-
-function parseErrorMessage(data){
-    
-    var temp = JSON.stringify(data);
-    //var errorMessage = object.
-    var object = JSON.parse(temp);
-
-    var stateValue = object.readyState;
-    var responseValue = JSON.parse(object.responseText);
-    var errorCode = responseValue.Code;
-}
-
 $(document).ready(function () {
-    $('#goBtn').click(function () {
+    //사용자가 URL 입력 후 전송 버튼을 눌렀을 떄 동작하는 코드
+    $('#urlSendButton').click(function () {
         $.ajax({
             //PERFORMANCE 탭의 Prediction URL 에서 상단의 image URL 부분 참조 
             url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/e1381295-16e1-4073-9ea9-c9585e8ffe10/url',
@@ -85,7 +24,8 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#sendBtn').click(function () {
+    //사용자가 파일 선택 후 전송 버튼을 눌렀을 때 동작하는 코드 
+    $('#fileSendButton').click(function () {
         var form = $('#fileForm')[0];
         var formData = new FormData(form);
         formData.append("fileObj", $("#fileTag")[0].files[0]);
@@ -166,3 +106,66 @@ $(document).ready(function () {
         
     });
 });
+
+
+function parseSuccessMessage(data) {
+    var object = JSON.parse(data);
+    var percentValue = object.Predictions[0].Probability;
+    var noodleValue = object.Predictions[0].Tag;
+    if (percentValue > 0.9) {
+        percentValue = percentValue * 100;
+        $('#percent').append(percentValue);
+        $('#noodleName').append(noodleValue);
+
+        var resultMessage = '<h1>' + noodleValue + '일 확률이 ' + percentValue + '% 정도 됩니다!</h1>';
+        document.getElementById('resultContainer').innerHTML = resultMessage;
+    }
+    else if (percentValue > 0.5) {
+        percentValue = percentValue * 100;
+        $('#percent').append(percentValue);
+        $('#noodleName').append(noodleValue);
+
+        var resultMessage = '<h1>확실하진 않지만... ' + noodleValue + '일 확률이 ' + percentValue + '% 정도 됩니다!</h1>';
+        document.getElementById('resultContainer').innerHTML = resultMessage;
+    }
+    else {
+        var exceptionMessage = '<h1>이거 냉면사진 맞아요? 아닌것 같은데...</h1>'
+        document.getElementById('resultContainer').innerHTML = exceptionMessage;
+    }
+}
+
+function connectToAzureStroage(file){
+    
+    var fileName = file.name;
+    var uriValue = "https://krnoodlestorage.blob.core.windows.net/input/"+fileName+"?st=2017-08-29T05%3A21%3A00Z&se=2017-12-31T05%3A21%3A00Z&sp=rwdl&sv=2015-12-11&sr=c&sig=yXmI8FEk23%2BRlb4CowdBdmxtLp1Su%2F03LRjZ34qyUN0%3D";
+
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": uriValue,
+        "method": "PUT",
+        "headers": {
+            "x-ms-blob-type": "BlockBlob",           
+        },
+        "data": file,
+        "processData": false
+    }
+
+    $.ajax(settings).done(function (response) {
+        //console.log(response);
+        //Azure Storage에 이미지 데이터 전송 완료
+        document.getElementById('fileForm').reset(); //Data Reset
+    });
+}
+
+
+function parseErrorMessage(data){
+    
+    var temp = JSON.stringify(data);
+    //var errorMessage = object.
+    var object = JSON.parse(temp);
+
+    var stateValue = object.readyState;
+    var responseValue = JSON.parse(object.responseText);
+    var errorCode = responseValue.Code;
+}
